@@ -9,6 +9,7 @@ class Network():
         self.topology.printTopology()
         self.router = Router(self.topology)
         self.contentStore = ContentStore(self.topology)
+        self.contentStore.printLocations()
         self.flowPusher = FlowPusher(self.topology)
 
     def request(self, host, content):

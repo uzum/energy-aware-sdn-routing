@@ -37,7 +37,7 @@ class Topology():
     def printTopology(self):
         sys.stderr.write('Current Topology:\n')
         for switch in self.switches:
-            sys.stderr.write(switch.name + ': \n')
-            sys.stderr.write('\tswitches: ' + ', '.join([s.name for s in switch.switches]) + '\n')
-            sys.stderr.write('\thosts: ' + ', '.join([h.name for h in switch.hosts]) + '\n')
-            sys.stderr.write('\n')
+            sys.stderr.write('  Switch ' + switch.name + ':\n')
+            sys.stderr.write('    neighbor switches: [' + ', '.join([s.name for s in switch.switches]) + ']\n')
+            sys.stderr.write('    neighbor hosts: [' + ', '.join([h.name for h in switch.hosts]) + ']\n')
+        sys.stderr.write('\n')
