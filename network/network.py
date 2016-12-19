@@ -1,3 +1,5 @@
+import sys
+
 from router import Router
 from content_store import ContentStore
 from flow_pusher import FlowPusher
@@ -17,6 +19,9 @@ class Network():
         routes = self.router.calculate(host, locations)
         for route in routes['base']:
             self.flowPusher.push(route)
+            self.contentStore.updateCachesAlongPath(content, 'base', route['_path'])
         for route in routes['enhancement']:
             self.flowPusher.push(route)
+            self.contentStore.updateCachesAlongPath(content, 'enhancement', route['_path'])
+        self.contentStore.printLocations()
         return routes

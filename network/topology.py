@@ -1,10 +1,15 @@
 import sys
+from collections import deque
 
 class Switch():
     def __init__(self, name):
         self.name = name
         self.switches = []
         self.hosts = []
+        self.cache = {
+            'base': deque([]),
+            'enhancement': deque([])
+        }
 class Host():
     def __init__(self, name):
         self.name = name
@@ -41,3 +46,14 @@ class Topology():
             sys.stderr.write('    neighbor switches: [' + ', '.join([s.name for s in switch.switches]) + ']\n')
             sys.stderr.write('    neighbor hosts: [' + ', '.join([h.name for h in switch.hosts]) + ']\n')
         sys.stderr.write('\n')
+
+    def get(self, name):
+        if (name[0] == 'h'):
+            return self.getHost(name)
+        return self.getSwitch(name)
+
+    def getSwitch(self, name):
+        return next(switch for switch in self.switches if switch.name == name)
+
+    def getHost(self, name):
+        return next(host for host in self.hosts if host.name == name)
