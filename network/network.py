@@ -6,13 +6,14 @@ from flow_pusher import FlowPusher
 from topology import Topology
 
 class Network():
-    def __init__(self):
+    def __init__(self, APIConstructor):
         self.topology = Topology()
+        self.api = APIConstructor(self.topology)
         self.topology.printTopology()
-        self.router = Router(self.topology)
+        self.router = Router(self.topology, self.api)
         self.contentStore = ContentStore(self.topology)
         self.contentStore.printLocations()
-        self.flowPusher = FlowPusher(self.topology)
+        self.flowPusher = FlowPusher(self.topology, self.api)
 
     def request(self, host, content):
         locations = self.contentStore.find(content)

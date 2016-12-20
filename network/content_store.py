@@ -1,8 +1,7 @@
 import sys
 import random
 from collections import deque
-CACHE_PROBABILITY = 0.5
-CACHE_SIZE = 2
+from config import *
 
 class ContentStore():
     def __init__(self, topology):

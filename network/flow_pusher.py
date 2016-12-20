@@ -1,8 +1,9 @@
 import sys
 
 class FlowPusher():
-    def __init__(self, topology):
+    def __init__(self, topology, api):
         self.topology = topology
+        self.api = api
 
     def push(self, route):
         sys.stderr.write('creating a path from ' + route['host'] + ' to ' + route['destination'] + ':\n')

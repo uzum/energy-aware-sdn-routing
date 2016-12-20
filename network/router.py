@@ -1,9 +1,11 @@
 import sys
 import random
+from config import *
 
 class Router():
-    def __init__(self, topology):
-        self.topology = topology;
+    def __init__(self, topology, api):
+        self.topology = topology
+        self.api = api
 
     def calculate(self, host, locations):
         randomBaseLocation = locations['base'][random.randint(0, len(locations['base']) - 1)]
