@@ -1,3 +1,4 @@
+import json
 import sys
 
 from router import Router
@@ -14,10 +15,11 @@ class Network():
         self.contentStore = ContentStore(self.topology)
         self.contentStore.printLocations()
         self.flowPusher = FlowPusher(self.topology, self.api)
+        sys.stderr.write(json.dumps(self.api.summary()))
 
-    def request(self, host, content):
+    def request(self, host, strategy, content):
         locations = self.contentStore.find(content)
-        routes = self.router.calculate(host, locations)
+        routes = self.router.calculate(strategy, host, locations)
         for route in routes['base']:
             self.flowPusher.push(route)
             self.contentStore.updateCachesAlongPath(content, 'base', route['_path'])
