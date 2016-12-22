@@ -22,8 +22,8 @@ class Topology():
             {'hosts': [4, 5, 6], 'switches': [2, 4, 7, 8]},
             {'hosts': [], 'switches': [1, 2, 3, 6, 7]},
             {'hosts': [7, 8, 9], 'switches': [1, 6]},
-            {'hosts': [], 'switches': [1, 4, 5]},
-            {'hosts': [], 'switches': [3, 4, 8]},
+            {'hosts': [], 'switches': [1, 4, 5, 7]},
+            {'hosts': [], 'switches': [3, 4, 6, 8]},
             {'hosts': [10, 11, 12], 'switches': [3, 7]}]
         self.switches = []
         self.hosts = []

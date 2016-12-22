@@ -24,8 +24,11 @@ class FloodlightAPI():
         except ValueError:
             return { 'error': 'Cannot parse response' }
 
-    def collectStatistics(self):
+    def collectBandwidth(self):
         return self.request('GET', '/wm/statistics/bandwidth/all/all/json', {})
+
+    def collectPorts(self):
+        return self.request('GET', '/wm/core/switch/all/port/json', {})
 
     def summary(self):
         return self.request('GET', '/wm/core/controller/summary/json', {})

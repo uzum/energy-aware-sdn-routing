@@ -1,11 +1,16 @@
 import sys
 import random
+import json
 from config import *
 
 class Router():
     def __init__(self, topology, api):
         self.topology = topology
         self.api = api
+
+    def collectStatistics(self):
+        sys.stderr.write(json.dumps(self.api.collectPorts()) + '\n')
+        sys.stderr.write(json.dumps(self.api.collectBandwidth()) + '\n')
 
     def calculateRandomRoute(self, host, locations):
         randomBaseLocation = locations['base'][random.randint(0, len(locations['base']) - 1)]
@@ -35,10 +40,11 @@ class Router():
         return routes
 
     def calculateLatencyOptimalRoute(self, host, locations):
-        return
+        return self.calculateRandomRoute(host, locations)
 
     def calculateEnergyOptimalRoute(self, host, locations):
-        return
+        self.collectStatistics()
+        return self.calculateRandomRoute(host, locations)
 
     def calculate(self, strategy, host, locations):
         if (strategy == 'random'):
