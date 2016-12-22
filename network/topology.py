@@ -13,8 +13,10 @@ class Switch():
         }
         self.portMap = {}
 class Host():
-    def __init__(self, name):
+    def __init__(self, name, switch):
         self.name = name
+        self.switch = switch
+
 class Topology():
     def __init__(self):
         topology = [{'hosts': [1, 2, 3], 'switches': [2, 4, 5, 6]},
@@ -33,7 +35,7 @@ class Topology():
             switch['switchObject'] = switchObject
             self.switches.append(switchObject)
             for host in switch['hosts']:
-                hostObject = Host( 'h' + str(host))
+                hostObject = Host('h' + str(host), switchObject)
                 self.hosts.append(hostObject)
                 switchObject.hosts.append(hostObject)
 

@@ -9,8 +9,16 @@ class Router():
         self.api = api
 
     def collectStatistics(self):
-        sys.stderr.write(json.dumps(self.api.collectPorts()) + '\n')
-        sys.stderr.write(json.dumps(self.api.collectBandwidth()) + '\n')
+        stats = {}
+        for switch, stats in self.api.collectPorts().iteritems():
+            switchObject = self.get('s' + switch[len(switch) - 1])
+            portStats = stats['port_reply'][0]['port']
+            stats[switchObject.name] = {}
+            for port in portStats:
+                neighbor = switchObject.portMap[int(port['port_number'])]
+                stats[switchObject.name][neighbor.name] = port;
+
+        # for bandwidth in self.api.collectBandwidth().iteritems:
 
     def calculateRandomRoute(self, host, locations):
         randomBaseLocation = locations['base'][random.randint(0, len(locations['base']) - 1)]
