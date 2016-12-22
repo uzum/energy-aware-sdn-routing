@@ -29,3 +29,6 @@ class FloodlightAPI():
 
     def summary(self):
         return self.request('GET', '/wm/core/controller/summary/json', {})
+
+    def links(self):
+        return self.request('GET', '/wm/topology/links/json', {})

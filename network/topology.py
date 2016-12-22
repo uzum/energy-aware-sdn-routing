@@ -1,4 +1,5 @@
 import sys
+import json
 from collections import deque
 
 class Switch():
@@ -10,6 +11,7 @@ class Switch():
             'base': deque([]),
             'enhancement': deque([])
         }
+        self.portMap = {}
 class Host():
     def __init__(self, name):
         self.name = name
@@ -45,6 +47,9 @@ class Topology():
             sys.stderr.write('  Switch ' + switch.name + ':\n')
             sys.stderr.write('    neighbor switches: [' + ', '.join([s.name for s in switch.switches]) + ']\n')
             sys.stderr.write('    neighbor hosts: [' + ', '.join([h.name for h in switch.hosts]) + ']\n')
+            sys.stderr.write('    ports:\n')
+            for port in switch.portMap:
+                sys.stderr.write('      port#' + str(port) + ': ' + switch.portMap[port].name + '\n')
         sys.stderr.write('\n')
 
     def get(self, name):
@@ -57,3 +62,10 @@ class Topology():
 
     def getHost(self, name):
         return next(host for host in self.hosts if host.name == name)
+
+    def fillPortMaps(self, links):
+        for link in links:
+            source = self.get('s' + link['src-switch'][len(link['src-switch']) - 1])
+            destination = self.get('s' + link['dst-switch'][len(link['dst-switch']) - 1])
+            source.portMap[link['src-port']] = destination
+            destination.portMap[link['dst-port']] = source

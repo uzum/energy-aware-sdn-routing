@@ -10,12 +10,16 @@ class Network():
     def __init__(self, APIConstructor):
         self.topology = Topology()
         self.api = APIConstructor(self.topology)
-        self.topology.printTopology()
         self.router = Router(self.topology, self.api)
         self.contentStore = ContentStore(self.topology)
-        self.contentStore.printLocations()
         self.flowPusher = FlowPusher(self.topology, self.api)
-        sys.stderr.write(json.dumps(self.api.summary()))
+
+        # fill out port maps for switches
+        self.topology.fillPortMaps(self.api.links())
+
+        #debug
+        self.contentStore.printLocations()
+        self.topology.printTopology()
 
     def request(self, host, strategy, content):
         locations = self.contentStore.find(content)
