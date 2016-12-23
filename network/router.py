@@ -9,16 +9,28 @@ class Router():
         self.api = api
 
     def collectStatistics(self):
-        stats = {}
+        cumulativeStats = {}
         for switch, stats in self.api.collectPorts().iteritems():
-            switchObject = self.get('s' + switch[len(switch) - 1])
+            switchObject = self.topology.get('s' + switch[len(switch) - 1])
             portStats = stats['port_reply'][0]['port']
-            stats[switchObject.name] = {}
+            cumulativeStats[switchObject.name] = {}
             for port in portStats:
-                neighbor = switchObject.portMap[int(port['port_number'])]
-                stats[switchObject.name][neighbor.name] = port;
+                if (port['port_number'] != 'local'):
+                    if (int(port['port_number']) in switchObject.portMap):
+                        neighbor = switchObject.portMap[int(port['port_number'])]
+                        cumulativeStats[switchObject.name][neighbor.name] = port;
 
-        # for bandwidth in self.api.collectBandwidth().iteritems:
+        for switch, stats in self.api.collectBandwidth().iteritems():
+            switchObject = self.topology.get('s' + switch[len(switch) - 1])
+            for port in stats:
+                if (port['port'] != 'local'):
+                    if (int(port['port']) in switchObject.portMap):
+                        neighbor = switchObject.portMap[int(port['port'])]
+                        cumulativeStats[switchObject.name][neighbor.name]['link-speed-bits-per-second'] = port['link-speed-bits-per-second']
+                        cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-rx'] = port['bits-per-second-rx']
+                        cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-tx'] = port['bits-per-second-tx']
+
+        return cumulativeStats
 
     def calculateRandomRoute(self, host, locations):
         randomBaseLocation = locations['base'][random.randint(0, len(locations['base']) - 1)]
@@ -51,7 +63,7 @@ class Router():
         return self.calculateRandomRoute(host, locations)
 
     def calculateEnergyOptimalRoute(self, host, locations):
-        self.collectStatistics()
+        sys.stderr.write(json.dumps(self.collectStatistics()) + '\n')
         return self.calculateRandomRoute(host, locations)
 
     def calculate(self, strategy, host, locations):
