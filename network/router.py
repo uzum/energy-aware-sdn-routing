@@ -20,15 +20,15 @@ class Router():
                         neighbor = switchObject.portMap[int(port['port_number'])]
                         cumulativeStats[switchObject.name][neighbor.name] = port;
 
-        for switch, stats in self.api.collectBandwidth().iteritems():
-            switchObject = self.topology.get('s' + switch[len(switch) - 1])
-            for port in stats:
-                if (port['port'] != 'local'):
-                    if (int(port['port']) in switchObject.portMap):
-                        neighbor = switchObject.portMap[int(port['port'])]
-                        cumulativeStats[switchObject.name][neighbor.name]['link-speed-bits-per-second'] = port['link-speed-bits-per-second']
-                        cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-rx'] = port['bits-per-second-rx']
-                        cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-tx'] = port['bits-per-second-tx']
+        for portStats in self.api.collectBandwidth():
+            switchId = portStats['dpid']
+            if (portStats['port'] != 'local'):
+                switchObject = self.topology.get('s' + switchId[len(switchId) - 1])
+                if (int(portStats['port']) in switchObject.portMap):
+                    neighbor = switchObject.portMap[int(portStats['port'])]
+                    cumulativeStats[switchObject.name][neighbor.name]['link-speed-bits-per-second'] = portStats['link-speed-bits-per-second']
+                    cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-rx'] = portStats['bits-per-second-rx']
+                    cumulativeStats[switchObject.name][neighbor.name]['bits-per-second-tx'] = portStats['bits-per-second-tx']
 
         return cumulativeStats
 
