@@ -18,7 +18,7 @@ class Router():
                 if (port['port_number'] != 'local'):
                     if (int(port['port_number']) in switchObject.portMap):
                         neighbor = switchObject.portMap[int(port['port_number'])]
-                        cumulativeStats[switchObject.name][neighbor.name] = port;
+                        cumulativeStats[switchObject.name][neighbor.name] = port
 
         for portStats in self.api.collectBandwidth():
             switchId = portStats['dpid']

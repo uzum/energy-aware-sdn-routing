@@ -12,10 +12,19 @@ class Switch():
             'enhancement': deque([])
         }
         self.portMap = {}
+
+    def getAttachmentPort(self, switchName):
+        for port in self.portMap:
+            if (self.portMap[port].name == switchName):
+                return port
+        return -1
+
 class Host():
     def __init__(self, name, switch):
         self.name = name
         self.switch = switch
+        self.ipv4 = '10.0.0.' + name[1:]
+        self.attachmentPort = None
 
 class Topology():
     def __init__(self):

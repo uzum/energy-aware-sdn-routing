@@ -16,6 +16,9 @@ class Network():
 
         # fill out port maps for switches
         self.topology.fillPortMaps(self.api.links())
+        # fill out attachment ports for each host
+        for host in self.topology.hosts:
+            host.attachmentPort = self.api.device(host.ipv4)['attachmentPoint'][0]['port']
 
         #debug
         self.contentStore.printLocations()

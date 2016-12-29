@@ -35,3 +35,9 @@ class FloodlightAPI():
 
     def links(self):
         return self.request('GET', '/wm/topology/links/json', {})
+
+    def device(self, ipv4):
+        return self.request('GET', '/wm/device/?ipv4=' + ipv4, {})[0]
+
+    def setFlow(self, args):
+        self.request('POST', '/wm/staticflowpusher/json', args)
