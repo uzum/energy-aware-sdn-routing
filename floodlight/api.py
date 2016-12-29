@@ -37,7 +37,11 @@ class FloodlightAPI():
         return self.request('GET', '/wm/topology/links/json', {})
 
     def device(self, ipv4):
-        return self.request('GET', '/wm/device/?ipv4=' + ipv4, {})[0]
+        response = self.request('GET', '/wm/device/?ipv4=' + ipv4, {})
+        if (response['devices']):
+            return response['devices'][0]
+        else:
+            raise Exception('Cannot find a device with ip ' + ipv4)
 
     def setFlow(self, args):
         self.request('POST', '/wm/staticflowpusher/json', args)

@@ -17,13 +17,14 @@ class Switch():
         for port in self.portMap:
             if (self.portMap[port].name == switchName):
                 return port
-        return -1
+        raise Exception(switchName + ' is not connected to ' + self.name)
 
 class Host():
     def __init__(self, name, switch):
         self.name = name
         self.switch = switch
         self.ipv4 = '10.0.0.' + name[1:]
+        # describes the port of the SWITCH this host is connected to
         self.attachmentPort = None
 
 class Topology():
@@ -61,6 +62,8 @@ class Topology():
             sys.stderr.write('    ports:\n')
             for port in switch.portMap:
                 sys.stderr.write('      port#' + str(port) + ': ' + switch.portMap[port].name + '\n')
+        for host in self.hosts:
+            sys.stderr.write('  Host ' + host.name + ' -> ipv4: ' + host.ipv4 + ', attachment port: ' + host.attachmentPort + '\n')
         sys.stderr.write('\n')
 
     def get(self, name):

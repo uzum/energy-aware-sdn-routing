@@ -71,5 +71,18 @@ class Router():
             return self.calculateRandomRoute(host, locations)
         elif (strategy == 'energy'):
             return self.calculateEnergyOptimalRoute(host, locations)
+        elif (strategy == 'flow-test'):
+            return {
+                'base': [{
+                    'host': 'h1',
+                    'destination': 'h4',
+                    '_path': ['s1', 's5', 's6', 's4', 's7', 's3']
+                }],
+                'enhancement': [{
+                    'host': 'h1',
+                    'destination': 'h7',
+                    '_path': ['s1', 's5']
+                }]
+            }
         else:
             return self.calculateLatencyOptimalRoute(host, locations)
