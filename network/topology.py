@@ -1,6 +1,8 @@
 import sys
 import json
+import random
 from collections import deque
+from config import *
 
 class Switch():
     def __init__(self, name):
@@ -12,6 +14,13 @@ class Switch():
             'enhancement': deque([])
         }
         self.portMap = {}
+        energyRandom = random.random()
+        if (energyRandom < LOW_ENERGY_SWITCH_PROB):
+            self.energyClass = 'low'
+        elif (energyRandom < LOW_ENERGY_SWITCH_PROB + MEDIUM_ENERGY_SWITCH_PROB):
+            self.energyClass = 'medium'
+        else:
+            self.energyClass = 'high'
 
     def getAttachmentPort(self, switchName):
         for port in self.portMap:
@@ -56,7 +65,7 @@ class Topology():
     def printTopology(self):
         sys.stderr.write('Current Topology:\n')
         for switch in self.switches:
-            sys.stderr.write('  Switch ' + switch.name + ':\n')
+            sys.stderr.write('  Switch ' + switch.name + ' (' + switch.energyClass + '):\n')
             sys.stderr.write('    neighbor switches: [' + ', '.join([s.name for s in switch.switches]) + ']\n')
             sys.stderr.write('    neighbor hosts: [' + ', '.join([h.name for h in switch.hosts]) + ']\n')
             sys.stderr.write('    ports:\n')
