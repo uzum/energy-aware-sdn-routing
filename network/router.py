@@ -400,29 +400,49 @@ class Router():
                     cur_path_energy = 0
                     cur_path = probable_paths[i]['_path']
                     #print cur_path
-                    for j in np.arange(len(cur_path)):
+                    for j in np.arange(len(cur_path))-1:
                         cur_switch = cur_path[j]
+                        next_switch   = cur_path[j+1]
                         #print cur_switch
-                        s_switch = self.topology.get(cur_switch)       
+                        s_switch = self.topology.get(cur_switch)
+                        n_switch = self.topology.get(next_switch)
                         #print s_switch.energyClass + ' ' + 'xxx'
-                        if  (s_switch.energyClass == 'low'):
-                            cur_path_energy = cur_path_energy + LOW_ENERGY
-                        elif(s_switch.energyClass == 'medium'):
-                            cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                        stats = self.collectStatistics()
+                        rec = stats[s_switch.name][n_switch.name]['bits-per-second-rx']
+                        tx  = stats[s_switch.name][n_switch.name]['bits-per-second-tx']
+                        limit = stats[s_switch.name][n_switch.name]['link-speed-bits-per-second']
+                        if(rec + tx < limit):
+                            if  (s_switch.energyClass == 'low'):
+                                cur_path_energy = cur_path_energy + LOW_ENERGY
+                            elif(s_switch.energyClass == 'medium'):
+                                cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                            else:
+                                cur_path_energy = cur_path_energy + HIGH_ENERGY
                         else:
                             cur_path_energy = cur_path_energy + HIGH_ENERGY
-
+                            
+                    cur_switch = cur_path[len(cur_path)-1]
+                    #print cur_switch
+                    s_switch = self.topology.get(cur_switch)
+                       
+                    if  (s_switch.energyClass == 'low'):
+                        cur_path_energy = cur_path_energy + LOW_ENERGY
+                    elif(s_switch.energyClass == 'medium'):
+                        cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                    else:
+                        cur_path_energy = cur_path_energy + HIGH_ENERGY
+                             
+                    
                     if(cur_path_energy < best):
                         second_best = best
                         second_best_path = best_path 
                         best = cur_path_energy
                         best_path = probable_paths[i]
-
+                        routes['base'] = [best_path,second_best_path] 
                 #print best_path
                 #print second_best_path
-                routes['base'] = [best_path,second_best_path] 
                 
-                
+        ######################################################################################       
         #initially look at the cache of the requesting host itself        
         inlocalcache = 0   
         innghhost = 0
@@ -537,18 +557,39 @@ class Router():
                     cur_path_energy = 0
                     cur_path = probable_paths[i]['_path']
                     #print cur_path
-                    for j in np.arange(len(cur_path)):
+                    for j in np.arange(len(cur_path))-1:
                         cur_switch = cur_path[j]
+                        next_switch   = cur_path[j+1]
                         #print cur_switch
-                        s_switch = self.topology.get(cur_switch)        
+                        s_switch = self.topology.get(cur_switch) 
+                        n_switch = self.topology.get(next_switch)
                         #print s_switch.energyClass + ' ' + 'xxx'
-                        if  (s_switch.energyClass == 'low'):
-                            cur_path_energy = cur_path_energy + LOW_ENERGY
-                        elif(s_switch.energyClass == 'medium'):
-                            cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                        stats = self.collectStatistics()
+                        rec = stats[s_switch.name][n_switch.name]['bits-per-second-rx']
+                        tx  = stats[s_switch.name][n_switch.name]['bits-per-second-tx']
+                        limit = stats[s_switch.name][n_switch.name]['link-speed-bits-per-second']
+                        if(rec + tx < limit):
+                            if  (s_switch.energyClass == 'low'):
+                                cur_path_energy = cur_path_energy + LOW_ENERGY
+                            elif(s_switch.energyClass == 'medium'):
+                                cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                            else:
+                                cur_path_energy = cur_path_energy + HIGH_ENERGY
                         else:
                             cur_path_energy = cur_path_energy + HIGH_ENERGY
 
+                    cur_switch = cur_path[len(cur_path)-1]
+                    #print cur_switch
+                    s_switch = self.topology.get(cur_switch)
+                       
+                    if  (s_switch.energyClass == 'low'):
+                        cur_path_energy = cur_path_energy + LOW_ENERGY
+                    elif(s_switch.energyClass == 'medium'):
+                        cur_path_energy = cur_path_energy + MEDIUM_ENERGY
+                    else:
+                        cur_path_energy = cur_path_energy + HIGH_ENERGY
+                            
+                            
                     if(cur_path_energy < best):
                         second_best = best
                         second_best_path = best_path 
