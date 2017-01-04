@@ -2,6 +2,7 @@ import sys
 import random
 import json
 import numpy as np
+import random
 from config import *
 
 class Router():
@@ -134,13 +135,16 @@ class Router():
                                                     #print L[3][a] + ' ' + L[2][j] + ' ' + L[1][b]
                                                     probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][b], L[2][j], cur_host.switch.name]})
 
-          
-                x = random.randint(0,len(probable_paths)-1):
-                cur_path_x = probable_paths[x]
+                #print probable_paths
+                if(len(probable_paths) > 0):
+                    x = random.randint(0,len(probable_paths)-1)
+                    cur_path_x = probable_paths[x]
                 
-                y = random.randint(0,len(probable_paths)-1):
-                cur_path_y = probable_paths[y]
-                routes['base'] = [cur_path_x,cur_path_y] 
+                    y = random.randint(0,len(probable_paths)-1)
+                    cur_path_y = probable_paths[y]
+                    routes['base'] = [cur_path_x,cur_path_y] 
+                else:
+                    routes['base'] = [] 
                 
         #print routes['base']
         probable_paths = []        
@@ -244,10 +248,13 @@ class Router():
 
           
                
-                x = random.randint(0,len(probable_paths)-1):
-                cur_path_x = probable_paths[x]
-                
-                routes['enhancement'] = [cur_path_x]
+                #print probable_paths
+                if(len(probable_paths) > 0):
+                    x = random.randint(0,len(probable_paths)-1)
+                    cur_path_x = probable_paths[x]
+                    routes['enhancement'] = [cur_path_x]
+                else:
+                    routes['enhancement'] = []
          
         #print routes
         return routes
