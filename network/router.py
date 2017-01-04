@@ -400,7 +400,7 @@ class Router():
                     cur_path_energy = 0
                     cur_path = probable_paths[i]['_path']
                     #print cur_path
-                    for j in np.arange(len(cur_path))-1:
+                    for j in np.arange(len(cur_path)-1):
                         cur_switch = cur_path[j]
                         next_switch   = cur_path[j+1]
                         #print cur_switch
@@ -557,7 +557,7 @@ class Router():
                     cur_path_energy = 0
                     cur_path = probable_paths[i]['_path']
                     #print cur_path
-                    for j in np.arange(len(cur_path))-1:
+                    for j in np.arange(len(cur_path)-1):
                         cur_switch = cur_path[j]
                         next_switch   = cur_path[j+1]
                         #print cur_switch
