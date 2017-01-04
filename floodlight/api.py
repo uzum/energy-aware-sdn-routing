@@ -25,7 +25,12 @@ class FloodlightAPI():
             return { 'error': 'Cannot parse response' }
 
     def collectBandwidth(self):
-        return self.request('GET', '/wm/statistics/bandwidth/all/all/json', {})
+        stats = self.request('GET', '/wm/statistics/bandwidth/all/all/json', {})
+        # for some reason, floodlight may stop sending bandwidth data
+        # in that case, use backup data for simulation purpose
+        if (len(stats) == 0):
+            return BACKUP_BANDWIDTH_STATS
+        return stats
 
     def collectPorts(self):
         return self.request('GET', '/wm/core/switch/all/port/json', {})
