@@ -20,6 +20,7 @@ class ContentStore():
             hostCount = random.randint(2, len(self.topology.hosts) * HOST_WITH_CONTENT_PROBABILITY)
             for index in range(0, hostCount):
                 randomHost = self.topology.hosts[random.randint(0, len(self.topology.hosts) - 1)]
+                if (randomHost.isCache): continue
                 if (index % 2 == 0):
                     if (randomHost not in locations['base']):
                         locations['base'].append(randomHost)
@@ -30,8 +31,8 @@ class ContentStore():
     def find(self, content):
         if (content not in self.library):
             raise Exception(content + ' not found in the content store')
-        cachedBaseLayers = [switch.name for switch in self.caches if (content in switch.cache['base'])]
-        cachedEnhancementLayer = [switch.name for switch in self.caches if (content in switch.cache['enhancement'])]
+        cachedBaseLayers = [switch.cacheHost.name for switch in self.caches if (content in switch.cache['base'])]
+        cachedEnhancementLayer = [switch.cacheHost.name for switch in self.caches if (content in switch.cache['enhancement'])]
         return {
             'content': content,
             'base': cachedBaseLayers + [host.name for host in self.library[content]['base']],
@@ -50,18 +51,18 @@ class ContentStore():
     def printLocations(self):
         sys.stderr.write('Current Cache Map:\n')
         for switch in self.caches:
-            sys.stderr.write('  Switch ' + switch.name + '\n')
+            sys.stderr.write('  Switch ' + switch.name + ' (cache host: ' + switch.cacheHost.name + ')\n')
             sys.stderr.write('    Cached base layers: ' + ', '.join([str(item) for item in switch.cache['base']]) + '\n')
             sys.stderr.write('    Cached enhancement layers: ' + ', '.join([str(item) for item in switch.cache['enhancement']]) + '\n')
         sys.stderr.write('Content Locations:\n')
         for item, locations in self.library.iteritems():
             sys.stderr.write('  Content ' + item + ':\n')
             sys.stderr.write('    Base: ' + ', '.join(
-                [l.name for l in locations['base']] + 
-                [switch.name for switch in self.caches if (item in switch.cache['base'])]
+                [l.name for l in locations['base']] +
+                [switch.cacheHost.name for switch in self.caches if (item in switch.cache['base'])]
             ) + '\n')
             sys.stderr.write('    Enhancement: ' + ', '.join(
-                [l.name for l in locations['enhancement']] + 
-                [switch.name for switch in self.caches if (item in switch.cache['enhancement'])]
+                [l.name for l in locations['enhancement']] +
+                [switch.cacheHost.name for switch in self.caches if (item in switch.cache['enhancement'])]
             ) + '\n')
         sys.stderr.write('\n')

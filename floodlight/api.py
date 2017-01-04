@@ -45,3 +45,12 @@ class FloodlightAPI():
 
     def setFlow(self, args):
         self.request('POST', '/wm/staticflowpusher/json', args)
+
+    def flows(self, switch):
+        response = self.request('GET', '/wm/staticflowpusher/list/' + switch + '/json', {})
+        if (len(response[switch]) == 0):
+            return []
+        return [flow.keys()[0] for flow in response[switch]]
+
+    def deleteFlow(self, args):
+        self.request('DELETE', '/wm/staticflowpusher/json', args)

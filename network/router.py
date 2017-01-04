@@ -74,13 +74,13 @@ class Router():
         elif (strategy == 'flow-test'):
             return {
                 'base': [{
-                    'host': 'h1',
-                    'destination': 'h4',
+                    'host': 'h2',
+                    'destination': 'h5',
                     '_path': ['s1', 's5', 's6', 's4', 's7', 's3']
                 }],
                 'enhancement': [{
-                    'host': 'h1',
-                    'destination': 'h7',
+                    'host': 'h2',
+                    'destination': 'h9',
                     '_path': ['s1', 's5']
                 }]
             }

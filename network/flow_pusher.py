@@ -5,20 +5,25 @@ class FlowPusher():
         self.topology = topology
         self.api = api
 
-    def clearOldFlows(self, hostName):
+    def clearOldFlows(self, host, destination):
         for switch in self.topology.switches:
-            flows = self.api.flows(switch)
+            dpid = '00:00:00:00:00:00:00:0' + switch.name[1]
+            flows = self.api.flows(dpid)
             for flow in flows:
-                if (flow.name.startswith(hostName)):
-                    self.api.deleteFlow(switch, flow)
+                if (flow.startswith(host + ':' + destination)):
+                    sys.stderr.write('deleting a flow in ' + switch.name + ', ' + host + ' > ' + destination + '\n')
+                    self.api.deleteFlow({
+                        'name': flow,
+                        'switch': dpid
+                    })
 
     def push(self, route):
-        # self.clearOldFlows(route['host'])
+        self.clearOldFlows(route['host'], route['destination'])
         sys.stderr.write('creating a path from ' + route['host'] + ' to ' + route['destination'] + ':\n')
 
         src = self.topology.getHost(route['host'])
         dst = self.topology.getHost(route['destination'])
-        
+
         for index, switch in enumerate(route['_path']):
             currentSwitch = self.topology.get(switch)
 
@@ -48,7 +53,7 @@ class FlowPusher():
                 'ipv4_dst': dst.ipv4,
                 'eth_type': '0x800',
                 'cookie': '0',
-                'priority': '3333',
+                'priority': '32768',
                 'in_port': str(in_port),
                 'active': 'true',
                 'actions': 'output=' + str(out_port),
@@ -57,11 +62,11 @@ class FlowPusher():
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
                 'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.farp',
-                'ipv4_src': src.ipv4,
-                'ipv4_dst': dst.ipv4,
+                'arp_spa': src.ipv4,
+                'arp_tpa': dst.ipv4,
                 'eth_type': '0x806',
                 'cookie': '0',
-                'priority': '3333',
+                'priority': '32768',
                 'in_port': str(in_port),
                 'active': 'true',
                 'actions': 'output=' + str(out_port),
@@ -74,7 +79,7 @@ class FlowPusher():
                 'ipv4_dst': src.ipv4,
                 'eth_type': '0x800',
                 'cookie': '0',
-                'priority': '3333',
+                'priority': '32768',
                 'in_port': str(out_port),
                 'active': 'true',
                 'actions': 'output=' + str(in_port),
@@ -83,11 +88,11 @@ class FlowPusher():
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
                 'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.rarp',
-                'ipv4_src': dst.ipv4,
-                'ipv4_dst': src.ipv4,
+                'arp_spa': dst.ipv4,
+                'arp_tpa': src.ipv4,
                 'eth_type': '0x806',
                 'cookie': '0',
-                'priority': '3333',
+                'priority': '32768',
                 'in_port': str(out_port),
                 'active': 'true',
                 'actions': 'output=' + str(in_port),

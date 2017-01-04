@@ -13,6 +13,7 @@ class Switch():
             'base': deque([]),
             'enhancement': deque([])
         }
+        self.cacheHost = None
         self.portMap = {}
         energyRandom = random.random()
         if (energyRandom < LOW_ENERGY_SWITCH_PROB):
@@ -33,19 +34,20 @@ class Host():
         self.name = name
         self.switch = switch
         self.ipv4 = '10.0.0.' + name[1:]
+        self.isCache = False
         # describes the port of the SWITCH this host is connected to
         self.attachmentPort = None
 
 class Topology():
     def __init__(self):
         topology = [{'hosts': [1, 2, 3], 'switches': [2, 4, 5, 6]},
-            {'hosts': [], 'switches': [1, 3, 4]},
-            {'hosts': [4, 5, 6], 'switches': [2, 4, 7, 8]},
-            {'hosts': [], 'switches': [1, 2, 3, 6, 7]},
-            {'hosts': [7, 8, 9], 'switches': [1, 6]},
-            {'hosts': [], 'switches': [1, 4, 5, 7]},
-            {'hosts': [], 'switches': [3, 4, 6, 8]},
-            {'hosts': [10, 11, 12], 'switches': [3, 7]}]
+            {'hosts': [4], 'switches': [1, 3, 4]},
+            {'hosts': [5, 6, 7], 'switches': [2, 4, 7, 8]},
+            {'hosts': [8], 'switches': [1, 2, 3, 6, 7]},
+            {'hosts': [9, 10, 11], 'switches': [1, 6]},
+            {'hosts': [12], 'switches': [1, 4, 5, 7]},
+            {'hosts': [13], 'switches': [3, 4, 6, 8]},
+            {'hosts': [14, 15, 16], 'switches': [3, 7]}]
         self.switches = []
         self.hosts = []
 
@@ -53,10 +55,13 @@ class Topology():
             switchObject = Switch( 's' + str(idx + 1) )
             switch['switchObject'] = switchObject
             self.switches.append(switchObject)
-            for host in switch['hosts']:
+            for hostIdx, host in enumerate(switch['hosts']):
                 hostObject = Host('h' + str(host), switchObject)
                 self.hosts.append(hostObject)
                 switchObject.hosts.append(hostObject)
+                if (hostIdx == 0):
+                    hostObject.isCache = True
+                    switchObject.cacheHost = hostObject
 
         for switch in topology:
             for neighbor in switch['switches']:
@@ -71,6 +76,7 @@ class Topology():
             sys.stderr.write('    ports:\n')
             for port in switch.portMap:
                 sys.stderr.write('      port#' + str(port) + ': ' + switch.portMap[port].name + '\n')
+            sys.stderr.write('  Cache host: ' + switch.cacheHost.name + '\n')
         for host in self.hosts:
             sys.stderr.write('  Host ' + host.name + ' -> ipv4: ' + host.ipv4 + ', attachment port: ' + host.attachmentPort + '\n')
         sys.stderr.write('\n')
