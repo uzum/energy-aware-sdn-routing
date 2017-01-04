@@ -37,17 +37,17 @@ class Router():
     def calculateRandomRoute(self, host, locations):
         routes = {}
         probable_paths = []
-        #initially look at the cache of the requesting host itself        
-        inlocalcache = 0   
+        #initially look at the cache of the requesting host itself
+        inlocalcache = 0
         innghhost = 0
         for i in np.arange(len(locations['base'])):
             if(locations['base'][i] == host):
                 #if found in its cache then set destination to host and path to empty
-                probable_paths.append({'host': host, 'destination': host,  '_path': []})  
+                probable_paths.append({'host': host, 'destination': host,  '_path': []})
                 inlocalcache = 1
-                
-            
-            
+
+
+
         #if not found in the cache itself look at the switch that the host is connected to
         if(inlocalcache == 0):
             hostObject = self.topology.get(host)
@@ -56,12 +56,12 @@ class Router():
                 for j in np.arange(len(locations['base'])):
                     if(hostAttachmentSwitch.hosts[i].name == locations['base'][j]):
                             #if found then assign the route
-                            # return 2 routes for the base layer 
+                            # return 2 routes for the base layer
                             probable_paths.append({'host': host,
                                                'destination':hostAttachmentSwitch.hosts[i].name ,
                                                '_path': [hostAttachmentSwitch.name]})
                             innghhost = 1
-    
+
             if(innghhost == 0):
                 hostAttachmentSwitch = self.topology.switches[0]
                 sink_tree_root = hostAttachmentSwitch.name
@@ -80,15 +80,15 @@ class Router():
                     #print l1s[i].name
                 L.append(X)
                 #print L[1][1]
-                
+
                 Y = []
                 for i in np.arange(len(l1s)):
                     cur_l2s = l1s[i].switches
                     for j in np.arange(len(cur_l2s)):
                         if cur_l2s[j].name not in L[0] and cur_l2s[j].name not in L[1] and cur_l2s[j].name not in Y:
                             Y.append(cur_l2s[j].name)
-                
-                L.append(Y)  
+
+                L.append(Y)
                 #print L
 
                 Z = []
@@ -100,8 +100,8 @@ class Router():
                             if cur_l3s[k].name not in L[0] and cur_l3s[k].name not in L[1] and cur_l3s[k].name not in L[2]and cur_l3s[k].name not in Z:
                                 Z.append(cur_l3s[k].name)
 
-                L.append(Z)  
-                
+                L.append(Z)
+
                 routes = {}
                 #for each of the base storing host look at the switch
                 for i in np.arange(len(locations['base'])):
@@ -109,13 +109,13 @@ class Router():
                     cur_host = self.topology.get(locations['base'][i])
                     #print cur_host.name + ' ' +cur_host.switch.name
                     #if cur_host.switch is in level 1 of L
-                    for a in np.arange(len(L[1])):        
+                    for a in np.arange(len(L[1])):
                         if(cur_host.switch.name == L[1][a]):
                             if(L[0][0] == hostAttachmentSwitch.name):
                                 #print L[1][a]
                                 probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, cur_host.switch.name]})
                     #else if cur_host.switch is in level 2 of L
-                    for a in np.arange(len(L[2])):    
+                    for a in np.arange(len(L[2])):
                         if(cur_host.switch.name == L[2][a]):
                             for j in np.arange(len(L[1])):
                                 for k in np.arange(len(cur_host.switch.switches)):
@@ -123,7 +123,7 @@ class Router():
                                         #print L[2][a] + ' ' + L[1][j]
                                         probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][j], cur_host.switch.name]})
                     #else if cur_host.switch is in level 3 of L
-                    for a in np.arange(len(L[3])):     
+                    for a in np.arange(len(L[3])):
                         if(cur_host.switch.name == L[3][a]):
                             #print L[3]
                             for j in np.arange(len(L[2])):
@@ -139,26 +139,26 @@ class Router():
                 if(len(probable_paths) > 0):
                     x = random.randint(0,len(probable_paths)-1)
                     cur_path_x = probable_paths[x]
-                
+
                     y = random.randint(0,len(probable_paths)-1)
                     cur_path_y = probable_paths[y]
-                    routes['base'] = [cur_path_x,cur_path_y] 
+                    routes['base'] = [cur_path_x,cur_path_y]
                 else:
-                    routes['base'] = [] 
-                
+                    routes['base'] = []
+
         #print routes['base']
-        probable_paths = []        
-        #initially look at the cache of the requesting host itself        
-        inlocalcache = 0   
+        probable_paths = []
+        #initially look at the cache of the requesting host itself
+        inlocalcache = 0
         innghhost = 0
         for i in np.arange(len(locations['enhancement'])):
             if(locations['enhancement'][i] == host):
                 #if found in its cache then set destination to host and path to empty
-                probable_paths.append({'host': host, 'destination': host,  '_path': []})  
+                probable_paths.append({'host': host, 'destination': host,  '_path': []})
                 inlocalcache = 1
-                
-            
-            
+
+
+
         #if not found in the cache itself look at the switch that the host is connected to
         if(inlocalcache == 0):
             hostObject = self.topology.get(host)
@@ -167,12 +167,12 @@ class Router():
                 for j in np.arange(len(locations['enhancement'])):
                     if(hostAttachmentSwitch.hosts[i].name == locations['enhancement'][j]):
                             #if found then assign the route
-                            # return 2 routes for the base layer 
+                            # return 2 routes for the base layer
                             probable_paths.append({'host': host,
                                                'destination':hostAttachmentSwitch.hosts[i].name ,
                                                '_path': [hostAttachmentSwitch.name]})
                             innghhost = 1
-    
+
             if(innghhost == 0):
                 hostAttachmentSwitch = self.topology.switches[0]
                 sink_tree_root = hostAttachmentSwitch.name
@@ -191,15 +191,15 @@ class Router():
                     #print l1s[i].name
                 L.append(X)
                 #print L[1][1]
-                
+
                 Y = []
                 for i in np.arange(len(l1s)):
                     cur_l2s = l1s[i].switches
                     for j in np.arange(len(cur_l2s)):
                         if cur_l2s[j].name not in L[0] and cur_l2s[j].name not in L[1] and cur_l2s[j].name not in Y:
                             Y.append(cur_l2s[j].name)
-                
-                L.append(Y)  
+
+                L.append(Y)
                 #print L
 
                 Z = []
@@ -211,8 +211,8 @@ class Router():
                             if cur_l3s[k].name not in L[0] and cur_l3s[k].name not in L[1] and cur_l3s[k].name not in L[2]and cur_l3s[k].name not in Z:
                                 Z.append(cur_l3s[k].name)
 
-                L.append(Z)  
-                
+                L.append(Z)
+
                 #routes = {}
                 #for each of the base storing host look at the switch
                 for i in np.arange(len(locations['enhancement'])):
@@ -220,13 +220,13 @@ class Router():
                     cur_host = self.topology.get(locations['enhancement'][i])
                     #print cur_host.name + ' ' +cur_host.switch.name
                     #if cur_host.switch is in level 1 of L
-                    for a in np.arange(len(L[1])):        
+                    for a in np.arange(len(L[1])):
                         if(cur_host.switch.name == L[1][a]):
                             if(L[0][0] == hostAttachmentSwitch.name):
                                 #print L[1][a]
                                 probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, cur_host.switch.name]})
                     #else if cur_host.switch is in level 2 of L
-                    for a in np.arange(len(L[2])):    
+                    for a in np.arange(len(L[2])):
                         if(cur_host.switch.name == L[2][a]):
                             for j in np.arange(len(L[1])):
                                 for k in np.arange(len(cur_host.switch.switches)):
@@ -234,7 +234,7 @@ class Router():
                                         #print L[2][a] + ' ' + L[1][j]
                                         probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][j], cur_host.switch.name]})
                     #else if cur_host.switch is in level 3 of L
-                    for a in np.arange(len(L[3])):     
+                    for a in np.arange(len(L[3])):
                         if(cur_host.switch.name == L[3][a]):
                             #print L[3]
                             for j in np.arange(len(L[2])):
@@ -246,8 +246,8 @@ class Router():
                                                     #print L[3][a] + ' ' + L[2][j] + ' ' + L[1][b]
                                                     probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][b], L[2][j], cur_host.switch.name]})
 
-          
-               
+
+
                 #print probable_paths
                 if(len(probable_paths) > 0):
                     x = random.randint(0,len(probable_paths)-1)
@@ -255,7 +255,7 @@ class Router():
                     routes['enhancement'] = [cur_path_x]
                 else:
                     routes['enhancement'] = []
-         
+
         #print routes
         return routes
 
@@ -282,20 +282,20 @@ class Router():
             }
         else:
             return self.calculateLatencyOptimalRoute(host, locations)
-        
-    def calculateEnergyOptimalRoute(self, host, locations):       
+
+    def calculateEnergyOptimalRoute(self, host, locations):
         routes = {}
-        #initially look at the cache of the requesting host itself        
-        inlocalcache = 0   
+        #initially look at the cache of the requesting host itself
+        inlocalcache = 0
         innghhost = 0
         for i in np.arange(len(locations['base'])):
             if(locations['base'][i] == host):
                 #if found in its cache then set destination to host and path to empty
-                routes['base'] = [{'host': host, 'destination': host,  '_path': []}]  
+                routes['base'] = [{'host': host, 'destination': host,  '_path': []}]
                 inlocalcache = 1
-                
-            
-            
+
+
+
         #if not found in the cache itself look at the switch that the host is connected to
         if(inlocalcache == 0):
             hostObject = self.topology.get(host)
@@ -304,13 +304,12 @@ class Router():
                 for j in np.arange(len(locations['base'])):
                     if(hostAttachmentSwitch.hosts[i].name == locations['base'][j]):
                             #if found then assign the route
-                            # return 2 routes for the base layer 
+                            # return 2 routes for the base layer
                             routes['base'] = [{'host': host,
                                                'destination':hostAttachmentSwitch.hosts[i].name ,
                                                '_path': [hostAttachmentSwitch.name]}]
-                            }]
                             innghhost = 1
-    
+
             if(innghhost == 0):
                 hostAttachmentSwitch = self.topology.switches[0]
                 sink_tree_root = hostAttachmentSwitch.name
@@ -329,15 +328,15 @@ class Router():
                     #print l1s[i].name
                 L.append(X)
                 #print L[1][1]
-                
+
                 Y = []
                 for i in np.arange(len(l1s)):
                     cur_l2s = l1s[i].switches
                     for j in np.arange(len(cur_l2s)):
                         if cur_l2s[j].name not in L[0] and cur_l2s[j].name not in L[1] and cur_l2s[j].name not in Y:
                             Y.append(cur_l2s[j].name)
-                
-                L.append(Y)  
+
+                L.append(Y)
                 #print L
 
                 Z = []
@@ -349,7 +348,7 @@ class Router():
                             if cur_l3s[k].name not in L[0] and cur_l3s[k].name not in L[1] and cur_l3s[k].name not in L[2]and cur_l3s[k].name not in Z:
                                 Z.append(cur_l3s[k].name)
 
-                L.append(Z)  
+                L.append(Z)
                 probable_paths = []
                 routes = {}
                 #for each of the base storing host look at the switch
@@ -358,13 +357,13 @@ class Router():
                     cur_host = self.topology.get(locations['base'][i])
                     #print cur_host.name + ' ' +cur_host.switch.name
                     #if cur_host.switch is in level 1 of L
-                    for a in np.arange(len(L[1])):        
+                    for a in np.arange(len(L[1])):
                         if(cur_host.switch.name == L[1][a]):
                             if(L[0][0] == hostAttachmentSwitch.name):
                                 #print L[1][a]
                                 probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, cur_host.switch.name]})
                     #else if cur_host.switch is in level 2 of L
-                    for a in np.arange(len(L[2])):    
+                    for a in np.arange(len(L[2])):
                         if(cur_host.switch.name == L[2][a]):
                             for j in np.arange(len(L[1])):
                                 for k in np.arange(len(cur_host.switch.switches)):
@@ -372,7 +371,7 @@ class Router():
                                         #print L[2][a] + ' ' + L[1][j]
                                         probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][j], cur_host.switch.name]})
                     #else if cur_host.switch is in level 3 of L
-                    for a in np.arange(len(L[3])):     
+                    for a in np.arange(len(L[3])):
                         if(cur_host.switch.name == L[3][a]):
                             #print L[3]
                             for j in np.arange(len(L[2])):
@@ -384,8 +383,8 @@ class Router():
                                                     #print L[3][a] + ' ' + L[2][j] + ' ' + L[1][b]
                                                     probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][b], L[2][j], cur_host.switch.name]})
 
-          
-                
+
+
 
                 best = 100000000
                 best_path = {}
@@ -416,40 +415,40 @@ class Router():
                                 cur_path_energy = cur_path_energy + HIGH_ENERGY
                         else:
                             cur_path_energy = cur_path_energy + HIGH_ENERGY
-                            
+
                     cur_switch = cur_path[len(cur_path)-1]
                     #print cur_switch
                     s_switch = self.topology.get(cur_switch)
-                       
+
                     if  (s_switch.energyClass == 'low'):
                         cur_path_energy = cur_path_energy + LOW_ENERGY
                     elif(s_switch.energyClass == 'medium'):
                         cur_path_energy = cur_path_energy + MEDIUM_ENERGY
                     else:
                         cur_path_energy = cur_path_energy + HIGH_ENERGY
-                             
-                    
+
+
                     if(cur_path_energy < best):
                         second_best = best
-                        second_best_path = best_path 
+                        second_best_path = best_path
                         best = cur_path_energy
                         best_path = probable_paths[i]
-                        routes['base'] = [best_path,second_best_path] 
+                        routes['base'] = [best_path,second_best_path]
                 #print best_path
                 #print second_best_path
-                
-        ######################################################################################       
-        #initially look at the cache of the requesting host itself        
-        inlocalcache = 0   
+
+        ######################################################################################
+        #initially look at the cache of the requesting host itself
+        inlocalcache = 0
         innghhost = 0
         for i in np.arange(len(locations['enhancement'])):
             if(locations['enhancement'][i] == host):
                 #if found in its cache then set destination to host and path to empty
-                routes['enhancement'] = [{'host': host, 'destination': host,  '_path': []}]  
+                routes['enhancement'] = [{'host': host, 'destination': host,  '_path': []}]
                 inlocalcache = 1
-                
-            
-            
+
+
+
         #if not found in the cache itself look at the switch that the host is connected to
         if(inlocalcache == 0):
             hostObject = self.topology.get(host)
@@ -458,12 +457,12 @@ class Router():
                 for j in np.arange(len(locations['enhancement'])):
                     if(hostAttachmentSwitch.hosts[i].name == locations['enhancement'][j]):
                             #if found then assign the route
-                            # return 2 routes for the base layer 
+                            # return 2 routes for the base layer
                             routes['enhancement'] = [{'host': host,
                                                'destination':hostAttachmentSwitch.hosts[i].name ,
                                                '_path': [hostAttachmentSwitch.name]}]
                             innghhost = 1
-    
+
             if(innghhost == 0):
                 hostAttachmentSwitch = self.topology.switches[0]
                 sink_tree_root = hostAttachmentSwitch.name
@@ -482,15 +481,15 @@ class Router():
                     #print l1s[i].name
                 L.append(X)
                 #print L[1][1]
-                
+
                 Y = []
                 for i in np.arange(len(l1s)):
                     cur_l2s = l1s[i].switches
                     for j in np.arange(len(cur_l2s)):
                         if cur_l2s[j].name not in L[0] and cur_l2s[j].name not in L[1] and cur_l2s[j].name not in Y:
                             Y.append(cur_l2s[j].name)
-                
-                L.append(Y)  
+
+                L.append(Y)
                 #print L
 
                 Z = []
@@ -502,22 +501,22 @@ class Router():
                             if cur_l3s[k].name not in L[0] and cur_l3s[k].name not in L[1] and cur_l3s[k].name not in L[2]and cur_l3s[k].name not in Z:
                                 Z.append(cur_l3s[k].name)
 
-                L.append(Z)  
+                L.append(Z)
                 probable_paths = []
-                
+
                 #for each of the base storing host look at the switch
                 for i in np.arange(len(locations['enhancement'])):
                     #hj
                     cur_host = self.topology.get(locations['enhancement'][i])
                     #print cur_host.name + ' ' +cur_host.switch.name
                     #if cur_host.switch is in level 1 of L
-                    for a in np.arange(len(L[1])):        
+                    for a in np.arange(len(L[1])):
                         if(cur_host.switch.name == L[1][a]):
                             if(L[0][0] == hostAttachmentSwitch.name):
                                 #print L[1][a]
                                 probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, cur_host.switch.name]})
                     #else if cur_host.switch is in level 2 of L
-                    for a in np.arange(len(L[2])):    
+                    for a in np.arange(len(L[2])):
                         if(cur_host.switch.name == L[2][a]):
                             for j in np.arange(len(L[1])):
                                 for k in np.arange(len(cur_host.switch.switches)):
@@ -525,7 +524,7 @@ class Router():
                                         #print L[2][a] + ' ' + L[1][j]
                                         probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][j], cur_host.switch.name]})
                     #else if cur_host.switch is in level 3 of L
-                    for a in np.arange(len(L[3])):     
+                    for a in np.arange(len(L[3])):
                         if(cur_host.switch.name == L[3][a]):
                             #print L[3]
                             for j in np.arange(len(L[2])):
@@ -537,8 +536,8 @@ class Router():
                                                     #print L[3][a] + ' ' + L[2][j] + ' ' + L[1][b]
                                                     probable_paths.append({'host': host,'destination':cur_host.name ,'_path': [hostAttachmentSwitch.name, L[1][b], L[2][j], cur_host.switch.name]})
 
-          
-                
+
+
 
                 best = 100000000
                 best_path = {}
@@ -553,7 +552,7 @@ class Router():
                         cur_switch = cur_path[j]
                         next_switch   = cur_path[j+1]
                         #print cur_switch
-                        s_switch = self.topology.get(cur_switch) 
+                        s_switch = self.topology.get(cur_switch)
                         n_switch = self.topology.get(next_switch)
                         #print s_switch.energyClass + ' ' + 'xxx'
                         stats = self.collectStatistics()
@@ -573,23 +572,22 @@ class Router():
                     cur_switch = cur_path[len(cur_path)-1]
                     #print cur_switch
                     s_switch = self.topology.get(cur_switch)
-                       
+
                     if  (s_switch.energyClass == 'low'):
                         cur_path_energy = cur_path_energy + LOW_ENERGY
                     elif(s_switch.energyClass == 'medium'):
                         cur_path_energy = cur_path_energy + MEDIUM_ENERGY
                     else:
                         cur_path_energy = cur_path_energy + HIGH_ENERGY
-                            
-                            
+
+
                     if(cur_path_energy < best):
                         second_best = best
-                        second_best_path = best_path 
+                        second_best_path = best_path
                         best = cur_path_energy
                         best_path = probable_paths[i]
 
                 #print best_path
                 #print second_best_path
                 routes['enhancement'] = [best_path]
-        return routes         
-
+        return routes
