@@ -85,15 +85,14 @@ class Router():
             return self.calculateLatencyOptimalRoute(host, locations)
         
     def calculateEnergyOptimalRoute(self, host, locations):       
-        
+        routes = {}
         #initially look at the cache of the requesting host itself        
         inlocalcache = 0   
         innghhost = 0
         for i in np.arange(len(locations['base'])):
             if(locations['base'][i] == host):
                 #if found in its cache then set destination to host and path to empty
-                routes['base'] = [{'host': host, 'destination': host,  '_path': []},
-                                  {'host': host, 'destination': host,  '_path': []}]  
+                routes['base'] = [{'host': host, 'destination': host,  '_path': []}]  
                 inlocalcache = 1
                 
             
@@ -109,10 +108,7 @@ class Router():
                             # return 2 routes for the base layer 
                             routes['base'] = [{'host': host,
                                                'destination':hostAttachmentSwitch.hosts[i].name ,
-                                               '_path': [hostAttachmentSwitch.name]},
-                                              {'host': host,
-                                               'destination':hostAttachmentSwitch.hosts[i].name ,
-                                               '_path': [hostAttachmentSwitch.name]
+                                               '_path': [hostAttachmentSwitch.name]}]
                             }]
                             innghhost = 1
     
@@ -293,7 +289,7 @@ class Router():
 
                 L.append(Z)  
                 probable_paths = []
-                #routes = {}
+                
                 #for each of the base storing host look at the switch
                 for i in np.arange(len(locations['enhancement'])):
                     #hj
