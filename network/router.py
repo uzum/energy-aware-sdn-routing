@@ -386,10 +386,6 @@ class Router():
 
           
                 
-                
-                LOW_ENERGY    = 30;
-                MEDIUM_ENERGY = 40;
-                HIGH_ENERGY   = 50;
 
                 best = 100000000
                 best_path = {}
@@ -543,10 +539,6 @@ class Router():
 
           
                 
-                
-                LOW_ENERGY    = 30;
-                MEDIUM_ENERGY = 40;
-                HIGH_ENERGY   = 50;
 
                 best = 100000000
                 best_path = {}
