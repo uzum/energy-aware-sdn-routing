@@ -433,7 +433,10 @@ class Router():
                         second_best_path = best_path
                         best = cur_path_energy
                         best_path = probable_paths[i]
-                        routes['base'] = [best_path,second_best_path]
+                        if (second_best_path):
+                            routes['base'] = [best_path,second_best_path]
+                        else:
+                            routes['base'] = [best_path]
                 #print best_path
                 #print second_best_path
 
