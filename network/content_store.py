@@ -12,7 +12,13 @@ class ContentStore():
             'c': {'base':[], 'enhancement':[] },
             'd': {'base':[], 'enhancement':[] },
             'e': {'base':[], 'enhancement':[] },
-            'f': {'base':[], 'enhancement':[] }
+            'f': {'base':[], 'enhancement':[] },
+            'g': {'base':[], 'enhancement':[] },
+            'h': {'base':[], 'enhancement':[] },
+            'i': {'base':[], 'enhancement':[] },
+            'j': {'base':[], 'enhancement':[] },
+            'k': {'base':[], 'enhancement':[] },
+            'l': {'base':[], 'enhancement':[] }
         }
         self.caches = [switch for switch in self.topology.switches if random.random() < CACHE_PROBABILITY]
         # randomly allocate base and enhancement layers to the hosts initially

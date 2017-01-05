@@ -21,7 +21,7 @@ def traffic_stats():
             else:
                 response = response + '-\t'
         response = response + '\n'
-    return Markup('<pre>' + response + '</pre>')
+    return Markup('<img src="/static/topology.png" width="500" height="300"/><pre>' + response + '</pre>')
 
 if __name__ == "__main__":
     app.run()

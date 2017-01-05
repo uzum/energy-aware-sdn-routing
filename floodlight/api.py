@@ -59,3 +59,6 @@ class FloodlightAPI():
 
     def deleteFlow(self, args):
         self.request('DELETE', '/wm/staticflowpusher/json', args)
+
+    def clearAllFlows(self):
+        self.request('GET', '/wm/staticflowpusher/clear/all/json', {})

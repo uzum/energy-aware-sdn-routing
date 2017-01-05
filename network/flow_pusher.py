@@ -18,6 +18,7 @@ class FlowPusher():
                     })
 
     def push(self, route):
+        # self.api.clearAllFlows()
         self.clearOldFlows(route['host'], route['destination'])
         sys.stderr.write('creating a path from ' + route['host'] + ' to ' + route['destination'] + ':\n')
 
@@ -48,7 +49,7 @@ class FlowPusher():
 
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
-                'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.f',
+                'name': route['host'] + ':' + route['destination'] + '|' + currentSwitch.name + '.f',
                 'ipv4_src': src.ipv4,
                 'ipv4_dst': dst.ipv4,
                 'eth_type': '0x800',
@@ -61,7 +62,7 @@ class FlowPusher():
 
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
-                'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.farp',
+                'name': route['host'] + ':' + route['destination'] + '|' + currentSwitch.name + '.farp',
                 'arp_spa': src.ipv4,
                 'arp_tpa': dst.ipv4,
                 'eth_type': '0x806',
@@ -74,7 +75,7 @@ class FlowPusher():
 
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
-                'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.r',
+                'name': route['host'] + ':' + route['destination'] + '|' + currentSwitch.name + '.r',
                 'ipv4_src': dst.ipv4,
                 'ipv4_dst': src.ipv4,
                 'eth_type': '0x800',
@@ -87,7 +88,7 @@ class FlowPusher():
 
             self.api.setFlow({
                 'switch': '00:00:00:00:00:00:00:0' + currentSwitch.name[1],
-                'name': route['host'] + ':' + route['destination'] + '|' + ':'.join(route['_path']) + '.rarp',
+                'name': route['host'] + ':' + route['destination'] + '|' + currentSwitch.name + '.rarp',
                 'arp_spa': dst.ipv4,
                 'arp_tpa': src.ipv4,
                 'eth_type': '0x806',

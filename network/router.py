@@ -271,13 +271,13 @@ class Router():
             return {
                 'base': [{
                     'host': 'h2',
-                    'destination': 'h5',
-                    '_path': ['s1', 's5', 's6', 's4', 's7', 's3']
+                    'destination': 'h10',
+                    '_path': ['s1', 's2', 's3', 's7', 's6', 's5']
                 }],
                 'enhancement': [{
                     'host': 'h2',
-                    'destination': 'h9',
-                    '_path': ['s1', 's5']
+                    'destination': 'h3',
+                    '_path': ['s1']
                 }]
             }
         else:
