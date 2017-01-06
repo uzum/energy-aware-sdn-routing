@@ -23,10 +23,10 @@ class ContentStore():
         self.caches = [switch for switch in self.topology.switches if random.random() < CACHE_PROBABILITY]
         # randomly allocate base and enhancement layers to the hosts initially
         for item, locations in self.library.iteritems():
-            hostCount = random.randint(2, len(self.topology.hosts) * HOST_WITH_CONTENT_PROBABILITY)
+            primaryHostCount = len(self.topology.hosts) - len(self.topology.switches)
+            hostCount = random.randint(2, primaryHostCount * HOST_WITH_CONTENT_PROBABILITY)
             for index in range(0, hostCount):
-                randomHost = self.topology.hosts[random.randint(0, len(self.topology.hosts) - 1)]
-                if (randomHost.isCache): continue
+                randomHost = [host for host in self.topology.hosts if not host.isCache][random.randint(0, primaryHostCount - 1)]
                 if (index % 2 == 0):
                     if (randomHost not in locations['base']):
                         locations['base'].append(randomHost)
